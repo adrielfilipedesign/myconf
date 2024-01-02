@@ -1,0 +1,149 @@
+#!/bin/bash
+#last update 02/01/24
+#made for zorin os 16.2
+
+flatpakCMD="flatpak install"
+aptRemoveCMD="sudo apt remove --purge"
+aptInstallCMD="sudo apt install"
+
+function removeApps(){
+
+    AppsToRemove=(
+        gimp
+        libreoffice*
+        gnome-mines
+        aisleriot
+        gnome-mahjongg
+        gnome-sudoku
+        quadrapassel
+    )
+    
+    for AppName in ${removeApps[@]}; do
+        $aptRemoveCMD "$AppName" -y
+    done
+   
+}
+
+function installApps(){
+
+    flatpakAppsToInstall=(
+    flathub com.visualstudio.code 
+    flathub fm.reaper.Reaper 
+    flathub com.obsproject.Studio 
+    flathub org.videolan.VLC -y
+    flathub org.qbittorrent.qBittorrent 
+    flathub com.discordapp.Discord 
+    flathub com.brave.Browser 
+    flathub com.google.Chrome 
+    flathub org.darktable.Darktable 
+    flathub org.inkscape.Inkscape 
+    flathub md.obsidian.Obsidian 
+    flathub org.kde.kdenlive 
+    flathub org.gimp.GIMP
+    flathub org.gimp.GIMP.Plugin.GMic 
+    flathub org.flameshot.Flameshot
+    flathub net.epson.epsonscan2 
+    )
+
+    for flatApp in ${flatpakAppsToInstall[@]}; do
+        $flatpakCMD "$flatApp" -y
+    done
+
+    aptAppsToInstall=(
+        winff
+        lsb
+        git
+        gnome-tweaks
+        ttf-mscorefonts-installer
+    )
+    
+    for aptApp in ${aptAppsToInstall[@]}; do
+        $aptInstallCMD "$aptApp" -y
+    done
+
+    flatpak run org.gimp.GIMP
+
+}
+function driversEpson() {
+    # epson L395
+    wget -c 'https://download3.ebz.epson.net/dsc/f/03/00/15/47/97/1cccff51246eb77d6896d8c04101c795d9d4bfa0/epson-inkjet-printer-escpr_1.8.3-1_amd64.deb'
+    sudo dpkg -i *.deb
+    sudo rm -f *.deb
+}
+
+function photoGIMPInstall() {
+
+    #made for GIMP flatpak version
+    if [ -d "$HOME/.config/GIMP" ]; then
+    echo "GIMP apt folder find, deleting.."
+    sudo rm -rf $HOME/.config/GIMP/
+    else
+    echo "GIMP apt folder NOT find."
+    fi
+    
+    wget -c https://github.com/Diolinux/PhotoGIMP/releases/download/1.1/PhotoGIMP.zip
+    unzip PhotoGIMP.zip
+    cp -r ./PhotoGIMP-master/.local/ $HOME
+    cp -r ./PhotoGIMP-master/.var/ $HOME
+    cp -r ./PhotoGIMP-master/.var/app/org.gimp.GIMP/config/ $HOME/.config/
+    sudo rm -rf ./PhotoGIMP-master ./PhotoGIMP.zip
+}
+
+function finalSettings() {
+    sudo apt update -y
+    sudo apt autoremove -y
+    sudo nano /etc/xdg/user-dirs.defaults
+    echo "Dont forget to change the XDG-UTILS directories from backup folder(NTFS). After create a symbolic links on the $HOME."
+}
+
+function createSymbolicLinks() {
+
+    bkpDir="/mnt/hdtrabalho/afilipe"
+
+    userFolders=(
+    Desktop
+    Documentos
+    Downloads
+    Imagens
+    Música
+    Vídeos
+    )
+
+    for folder in ${userFolders[@]}; do
+        if [ -d "$HOME/"$folder"" ]; then
+            sudo rm -rf $HOME/$folder
+        else
+            echo "The $folder folder not exist"
+        fi
+
+    done
+
+    bkpFolderName=(
+    Desktop
+    Documents
+    Downloads
+    Pictures
+    Músicas
+    Videos
+    )
+
+    number=-1
+    for link in ${bkpFolderName[@]}; do
+        ((number++))
+
+            if [ -L "$HOME/"$link"" ]; then
+                echo "$HOME/$link exist"
+            else
+                ln -s $bkpDir/$link $HOME/${userFolders[$number]}
+            fi
+    done
+
+}
+
+removeApps
+installApps
+driversEpson
+photoGIMPInstall
+finalSettings
+createSymbolicLinks
+
