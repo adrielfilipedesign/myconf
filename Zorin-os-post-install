@@ -42,7 +42,8 @@ function installApps(){
     flathub org.gimp.GIMP
     flathub org.gimp.GIMP.Plugin.GMic 
     flathub org.flameshot.Flameshot
-    flathub net.epson.epsonscan2 
+    flathub net.epson.epsonscan2
+    flathub com.github.tchx84.Flatseal
     )
 
     for flatApp in ${flatpakAppsToInstall[@]}; do
