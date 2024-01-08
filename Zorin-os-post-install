@@ -1,5 +1,5 @@
 #!/bin/bash
-#last update 04/01/24
+#last update 08/01/24
 #made for zorin os 16.2
 
 flatpakCMD="flatpak install"
@@ -45,6 +45,7 @@ function installApps(){
     flathub net.epson.epsonscan2
     flathub com.github.tchx84.Flatseal
     flathub net.scribus.Scribus
+    flathub fr.handbrake.ghb
     )
 
     for flatApp in ${flatpakAppsToInstall[@]}; do
