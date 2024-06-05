@@ -1,5 +1,5 @@
 #!/bin/bash
-#last update 29/01/24
+#last update 04/06/24
 #made for zorin os 16.2
 
 flatpakCMD="flatpak install"
@@ -27,7 +27,6 @@ function removeApps(){
 function installApps(){
 
     flatpakAppsToInstall=(
-    flathub com.visualstudio.code 
     flathub fm.reaper.Reaper 
     flathub com.obsproject.Studio 
     flathub org.videolan.VLC -y
@@ -58,7 +57,9 @@ function installApps(){
         winff
         lsb
         git
+        wget
         gnome-tweaks
+        code
         ttf-mscorefonts-installer
     )
     
@@ -150,5 +151,4 @@ installApps
 driversEpson
 photoGIMPInstall
 finalSettings
-createSymbolicLinks
-
+#createSymbolicLinks
