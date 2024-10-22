@@ -1,5 +1,5 @@
 #!/bin/bash
-#last update 04/06/24
+#last update 22/10/24
 #made for zorin os 16.2
 
 flatpakCMD="flatpak install"
@@ -22,6 +22,16 @@ function removeApps(){
         $aptRemoveCMD "$AppName" -y
     done
    
+}
+
+function installVSCode() {
+
+    sudo apt install software-properties-common apt-transport-https wget -y
+    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+    sudo dpkg -i *.deb
+    sudo rm -f *.deb
+
 }
 
 function installApps(){
@@ -150,5 +160,6 @@ removeApps
 installApps
 driversEpson
 photoGIMPInstall
+installVSCode
 finalSettings
 #createSymbolicLinks
